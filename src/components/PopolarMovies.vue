@@ -1,11 +1,13 @@
 <template>
     <div>
       <h1>Популярные фильмы</h1>
-      <ul>
+      <ul class="movie-list">
         <li v-for="movie in popularMovies" :key="movie.filmId">
-          <img :src="movie.posterUrl" alt="Poster" />
-          {{ movie.nameRu }}
-          <button @click="addMovie(movie)">Добавить в просмотренные</button>
+          <img v-lazy="movie.posterUrl" alt="Poster" />
+          <div>
+            <p>{{ movie.nameRu }}</p>
+            <button @click="addMovie(movie)">Добавить в просмотренные</button>
+          </div>
         </li>
       </ul>
     </div>
@@ -25,7 +27,6 @@
       const fetchPopularMovies = async () => {
         try {
           popularMovies.value = await getPopularMovies();
-          console.log('Популярные фильмы:', popularMovies.value);
         } catch (error) {
           console.error('Ошибка при получении популярных фильмов:', error);
         }
@@ -42,10 +43,29 @@
   });
   </script>
   
-  <style scoped>
-  img {
-    max-width: 100px;
-    margin-right: 10px;
+  <style lang="scss" scoped>
+  .movie-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  
+    li {
+      display: flex;
+      align-items: center;
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+      img {
+        max-width: 100px;
+        margin-right: 10px;
+      }
+  
+      button {
+        margin-left: auto;
+      }
+    }
   }
   </style>
   

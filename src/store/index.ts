@@ -1,41 +1,8 @@
-// src/store/index.ts
-
 import { createStore } from 'vuex';
-import { Movie } from '@/types/movie';
+import moviesModule from './modules/movies';
 
-interface State {
-  watchedMovies: Movie[];
-}
-
-export default createStore<State>({
-  state: {
-    watchedMovies: [],
-  },
-  getters: {
-    watchedMovies: (state) => state.watchedMovies,
-  },
-  mutations: {
-    SET_WATCHED_MOVIES(state, movies: Movie[]) {
-      state.watchedMovies = movies;
-    },
-    ADD_MOVIE(state, movie: Movie) {
-      state.watchedMovies.push(movie);
-    },
-    REMOVE_MOVIE(state, movieId: number) {
-      state.watchedMovies = state.watchedMovies.filter(movie => movie.filmId !== movieId);
-    },
-  },  
-  actions: {
-    async fetchWatchedMovies({ commit }) {
-      const movies: Movie[] = [];
-      commit('SET_WATCHED_MOVIES', movies);
-    },
-    addMovie({ commit }, movie: Movie) {
-      commit('ADD_MOVIE', movie);
-    },
-    removeMovie({ commit }, movieId: number) {
-      commit('REMOVE_MOVIE', movieId);
-    },
-  },
-  modules: {},
+export default createStore({
+  modules: {
+    movies: moviesModule
+  }
 });
