@@ -4,7 +4,7 @@ const routes = [
   {
     path: '/',
     name: 'PopularMovies',
-    component: () => import('@/components/PopolarMovies.vue')
+    component: () => import('@/components/PopularMovies.vue')
   },
   {
     path: '/search',

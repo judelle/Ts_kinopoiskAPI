@@ -1,7 +1,7 @@
 export interface Movie {
     filmId: number;
     nameRu: string;
-    posterUrl: string; // добавляем поле для URL постера
-    // добавь другие поля, которые тебе нужны
-  }
-  
+    posterUrl: string;
+    //   Сюда можно будет в бущуем добавить еще пункты
+
+}

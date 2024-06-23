@@ -1,11 +1,8 @@
 <template>
   <div>
-    <form @submit.prevent="searchMovies">
-    <input v-model="query" placeholder="Поиск фильма" />
-    <button type="submit">Искать</button>
-  </form>
+    <h1>Популярные фильмы</h1>
     <ul class="movie-list">
-      <li v-for="movie in movies" :key="movie.filmId">
+      <li v-for="movie in popularMovies" :key="movie.filmId">
         <img v-lazy="movie.posterUrl" alt="Poster" />
         <div>
           <p :class="{ 'watched-movie': isWatched(movie.filmId) }">{{ movie.nameRu }}</p>
@@ -17,25 +14,29 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import { Movie } from '@/types/movie';
-import { getMovies } from '@/services/movieService';
+import { getPopularMovies } from '@/services/movieService';
 import { useStore } from 'vuex';
 
 export default defineComponent({
   setup() {
-    const query = ref('');
-    const movies = ref<Movie[]>([]);
+    const popularMovies = ref<Movie[]>([]);
     const store = useStore();
 
-    const searchMovies = async () => {
-      if (query.value) {
-        movies.value = await getMovies(query.value);
+    const fetchPopularMovies = async () => {
+      try {
+        popularMovies.value = await getPopularMovies();
+      } catch (error) {
+        console.error('Ошибка при получении популярных фильмов:', error);
       }
     };
 
     const addMovie = (movie: Movie) => {
-      store.dispatch('movies/addMovie', movie);
+      store.dispatch('movies/addMovie', movie)
+        .catch(error => {
+          console.error('Ошибка при добавлении фильма в просмотренные:', error);
+        });
     };
 
     const isWatched = (movieId: number) => {
@@ -43,7 +44,9 @@ export default defineComponent({
       return watchedMovies.some(movie => movie.filmId === movieId);
     };
 
-    return { query, movies, searchMovies, addMovie, isWatched };
+    onMounted(fetchPopularMovies);
+
+    return { popularMovies, addMovie, isWatched };
   },
 });
 </script>

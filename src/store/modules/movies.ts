@@ -20,7 +20,9 @@ const moviesModule: Module<MoviesState, any> = {
             state.watchedMovies = movies;
         },
         ADD_MOVIE(state, movie: Movie) {
-            state.watchedMovies.push(movie);
+            if (!state.watchedMovies.some(m => m.filmId === movie.filmId)) {
+                state.watchedMovies.push(movie);
+            }
         },
         REMOVE_MOVIE(state, movieId: number) {
             state.watchedMovies = state.watchedMovies.filter(movie => movie.filmId !== movieId);
@@ -28,8 +30,12 @@ const moviesModule: Module<MoviesState, any> = {
     },
     actions: {
         async fetchWatchedMovies({ commit }) {
-            const movies: Movie[] = [];
-            commit('SET_WATCHED_MOVIES', movies);
+            try {
+                const movies: Movie[] = [];
+                commit('SET_WATCHED_MOVIES', movies);
+            } catch (error) {
+                console.error('Ошибка при загрузке просмотренных фильмов:', error);
+            }
         },
         addMovie({ commit }, movie: Movie) {
             commit('ADD_MOVIE', movie);
